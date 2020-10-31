@@ -132,7 +132,11 @@ class LgotOtverRuParser extends AbstractBaseParser
         $contentCrawler = $newsPostCrawler->filterXPath('//div[@itemprop="articleBody"]');
 
         $this->removeDomNodes($contentCrawler, '//*[contains(translate(substring(text(), 0, 14), "ФОТО", "фото"), "фото")]
-        | //div[child::a[@class="article__post-link"]]');
+        | //div[child::a[@class="article__post-link"]]
+        | //*[@class="alert"]
+        | //*[@itemprop="brand"]
+        | //*[@itemprop="logo"]
+        | //*[@itemprop="address"]');
 
         $this->purifyNewsPostContent($contentCrawler);
 
