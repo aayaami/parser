@@ -83,6 +83,17 @@ class RodStoronatarRuParser extends AbstractBaseParser
         $newsPageCrawler = new Crawler($newsPage);
         $newsPostCrawler = $newsPageCrawler->filterXPath('//article');
 
+        try {
+            $times = $newsPostCrawler->filterXPath('//time')->each(function(Crawler $node) {
+                return $node->text();
+            });
+            $publishedAtString = implode(' ', $times);
+            $publishedAt = DateTimeImmutable::createFromFormat('d.m.Y H:i', $publishedAtString, new DateTimeZone('UTC'));
+            $previewNewsItem->setPublishedAt($publishedAt);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
         $image = null;
         $mainImageCrawler = $newsPageCrawler->filterXPath('//*[@class="ymnews-single-header-thumbnail"]//img')->first();
         if ($this->crawlerHasNodes($mainImageCrawler)) {
